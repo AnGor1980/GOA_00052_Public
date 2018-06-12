@@ -1,0 +1,281 @@
+﻿Exportfile for AOT version 1.0 or later
+Formatversion: 1
+
+***Element: DBT
+
+; Microsoft Dynamics AX Table : GOA_LedgerOpeningBalance unloaded
+; --------------------------------------------------------------------------------
+  TABLEVERSION 1
+  
+  TABLE #GOA_LedgerOpeningBalance
+    EnforceFKRelation 1
+    PROPERTIES
+      Name                #GOA_LedgerOpeningBalance
+      CreateRecIdIndex    #Yes
+      PrimaryIndex        #SurrogateKey
+      ClusterIndex        #SurrogateKey
+      Origin              #{F1181596-C404-4843-A358-BCCD40E2FA15}
+    ENDPROPERTIES
+    
+    FIELDS
+      FIELD #DocumentDate
+        DATE
+        PROPERTIES
+          Name                #DocumentDate
+          Table               #GOA_LedgerOpeningBalance
+          Origin              #{4A700AB1-68EF-4049-AAB1-A2024ED8AB6B}
+          ExtendedDataType    #DocumentDate
+        ENDPROPERTIES
+        
+      FIELD #Account
+        STRING
+        PROPERTIES
+          Name                #Account
+          Table               #GOA_LedgerOpeningBalance
+          Origin              #{4E89D638-C0FD-4292-9030-2DEA0FC1DD21}
+          ExtendedDataType    #AccountNumber
+          StringSize          #30
+        ENDPROPERTIES
+        
+      FIELD #AccountType
+        ENUM
+        PROPERTIES
+          Name                #AccountType
+          Table               #GOA_LedgerOpeningBalance
+          Origin              #{2C13F289-DE6C-492E-94C4-15FA291BDD5C}
+          EnumType            #LedgerJournalACType
+        ENDPROPERTIES
+        
+      FIELD #AmountCurCredit
+        REAL
+        PROPERTIES
+          Name                #AmountCurCredit
+          Table               #GOA_LedgerOpeningBalance
+          Origin              #{22D3A1A1-83A0-4C9E-A785-6E2AC0220E2B}
+        ENDPROPERTIES
+        
+      FIELD #AmountCurDebit
+        REAL
+        PROPERTIES
+          Name                #AmountCurDebit
+          Table               #GOA_LedgerOpeningBalance
+          Origin              #{69EBD09B-EDBF-44A7-A08F-71B3C326DF1E}
+        ENDPROPERTIES
+        
+      FIELD #DueDate
+        DATE
+        PROPERTIES
+          Name                #DueDate
+          Table               #GOA_LedgerOpeningBalance
+          Origin              #{95FB1B30-2A7D-41CA-A9C0-8145ACB523F6}
+          ExtendedDataType    #DueDate
+        ENDPROPERTIES
+        
+      FIELD #Imported
+        ENUM
+        PROPERTIES
+          Name                #Imported
+          Table               #GOA_LedgerOpeningBalance
+          Origin              #{CA938338-96BF-4CFC-9EEC-76987B893AF7}
+          EnumType            #NoYes
+        ENDPROPERTIES
+        
+      FIELD #InvoiceId
+        STRING
+        PROPERTIES
+          Name                #InvoiceId
+          Table               #GOA_LedgerOpeningBalance
+          Origin              #{FD183435-4841-46C8-A462-5492DBEF0FCB}
+          ExtendedDataType    #InvoiceId
+          StringSize          #20
+        ENDPROPERTIES
+        
+      FIELD #JournalNum
+        STRING
+        PROPERTIES
+          Name                #JournalNum
+          Table               #GOA_LedgerOpeningBalance
+          Origin              #{A44D9D95-D284-487A-86B2-E38E30F6966C}
+          ExtendedDataType    #LedgerJournalId
+        ENDPROPERTIES
+        
+      FIELD #LedgerDimension
+        INT64
+        PROPERTIES
+          Name                #LedgerDimension
+          Table               #GOA_LedgerOpeningBalance
+          Origin              #{D83DBCBE-D92D-4DA7-B33F-9C99EF79B6FA}
+          ExtendedDataType    #DimensionDynamicAccount
+        ENDPROPERTIES
+        
+      FIELD #OffsetAccount
+        STRING
+        PROPERTIES
+          Name                #OffsetAccount
+          Table               #GOA_LedgerOpeningBalance
+          Origin              #{7AA42112-C437-4C98-B331-F6A37895DBBE}
+          ExtendedDataType    #MainAccountNum
+          StringSize          #20
+        ENDPROPERTIES
+        
+      FIELD #OffsetAccountType
+        ENUM
+        PROPERTIES
+          Name                #OffsetAccountType
+          Table               #GOA_LedgerOpeningBalance
+          Origin              #{2BADE793-CEFF-4CA0-9704-68C8105F0A87}
+          EnumType            #LedgerJournalACType
+        ENDPROPERTIES
+        
+      FIELD #OffsetLedgerDimension
+        INT64
+        PROPERTIES
+          Name                #OffsetLedgerDimension
+          Table               #GOA_LedgerOpeningBalance
+          Origin              #{5B423E45-EE1B-4351-A39E-B1410668BF11}
+          ExtendedDataType    #DimensionDynamicAccount
+        ENDPROPERTIES
+        
+      FIELD #TransactionType
+        ENUM
+        PROPERTIES
+          Name                #TransactionType
+          Table               #GOA_LedgerOpeningBalance
+          Origin              #{95744727-AC18-4DBC-82E5-3962A8C94A95}
+          EnumType            #LedgerTransType
+        ENDPROPERTIES
+        
+      FIELD #TransDate
+        DATE
+        PROPERTIES
+          Name                #TransDate
+          Table               #GOA_LedgerOpeningBalance
+          Origin              #{2F46327B-7380-4C46-8EB9-5522E6E506F2}
+          ExtendedDataType    #TransDate
+        ENDPROPERTIES
+        
+      FIELD #TransTxt
+        STRING
+        PROPERTIES
+          Name                #TransTxt
+          Table               #GOA_LedgerOpeningBalance
+          Origin              #{942D6998-347B-4E3C-852D-D7A74B72B366}
+          ExtendedDataType    #TransTxt
+          StringSize          #140
+        ENDPROPERTIES
+        
+    ENDFIELDS
+    GROUPS
+    ENDGROUPS
+    
+    INDICES
+    ENDINDICES
+    FULLTEXTINDICES
+    ENDFULLTEXTINDICES
+    REFERENCES
+      REFERENCE #DimensionAttributeValueCombination
+        PROPERTIES
+          Name                #DimensionAttributeValueCombination
+          Table               #DimensionAttributeValueCombination
+          Role                #LedgerDimension
+        ENDPROPERTIES
+        
+        FIELDREFERENCES
+          REFERENCETYPE PKFK
+          PROPERTIES
+            Field               #LedgerDimension
+            RelatedField        #RecId
+          ENDPROPERTIES
+          
+        ENDFIELDREFERENCES
+      ENDREFERENCE
+      REFERENCE #OffsetDimensionAttributeValueCombination
+        PROPERTIES
+          Name                #OffsetDimensionAttributeValueCombination
+          Table               #DimensionAttributeValueCombination
+          Role                #OffsetLedgerDimension
+        ENDPROPERTIES
+        
+        FIELDREFERENCES
+          REFERENCETYPE PKFK
+          PROPERTIES
+            Field               #OffsetLedgerDimension
+            RelatedField        #RecId
+          ENDPROPERTIES
+          
+        ENDFIELDREFERENCES
+      ENDREFERENCE
+    ENDREFERENCES
+    
+    DELETEACTIONS
+    ENDDELETEACTIONS
+    
+    METHODS
+      SOURCE #getLedgerDimension
+        #private RecId getLedgerDimension(AccountNumber _AccountNumber,LedgerJournalACType _AccountType)
+        #{
+        #
+        #    return  _AccountType == LedgerJournalACType::Ledger ?
+        #            this.findDimensionAttributeValueCombination(_AccountNumber)
+        #        : DimensionStorage::getDynamicAccount(_AccountNumber, enum2int(_AccountType));
+        #
+        #}
+      ENDSOURCE
+      SOURCE #findDimensionAttributeValueCombination
+        #private RecId findDimensionAttributeValueCombination(MainAccountNum _MainAccountId)
+        #{
+        #    RecId ret;
+        #    LedgerChartOfAccounts ledgerChartOfAccounts;
+        #    MainAccount mainAccount;
+        #    DimensionAttributeValueCombination  dimensionAttributeValueCombination;
+        #    DimensionHierarchy dimensionHierarchy;
+        #
+        #    dimensionHierarchy = DimensionHierarchy::findByTypeAndName(DimensionHierarchyType::AccountStructure, this.dataAreaId);
+        #    ledgerChartOfAccounts = LedgerChartOfAccounts::findByName(this.dataAreaId);
+        #    if(ledgerChartOfAccounts)
+        #    {
+        #        mainAccount = MainAccount::findByMainAccountId(_MainAccountId,false,ledgerChartOfAccounts.RecId);
+        #        if (mainAccount)
+        #        {
+        #            ret = DimensionDefaultingEngine::getLedgerDimensionFromAccountAndDim(mainAccount.RecId,dimensionHierarchy.RecId);
+        #        }
+        #    }
+        #    return ret;
+        #}
+      ENDSOURCE
+      SOURCE #initValue
+        #public void initValue()
+        #{
+        #    this.TransactionType    = LedgerTransType::GeneralJournal;
+        #    this.OffsetAccountType  = LedgerJournalACType::Ledger;
+        #
+        #    super();
+        #}
+      ENDSOURCE
+      SOURCE #insert
+        #public void insert()
+        #{
+        #    this.updateLedgerDim();
+        #    super();
+        #}
+      ENDSOURCE
+      SOURCE #updateLedgerDim
+        #public void updateLedgerDim()
+        #{
+        #    LedgerChartOfAccounts ledgerChartOfAccounts;
+        #    MainAccount mainAccount;
+        #    DimensionAttributeValueCombination  dimensionAttributeValueCombination;
+        #
+        #    if(!this.LedgerDimension)
+        #        this.LedgerDimension = this.getLedgerDimension(this.Account, this.AccountType);
+        #
+        #    if(!this.OffsetLedgerDimension)
+        #        this.OffsetLedgerDimension = this.getLedgerDimension(this.OffsetAccount, this.OffsetAccountType);
+        #
+        #}
+      ENDSOURCE
+    ENDMETHODS
+  ENDTABLE
+  
+
+***Element: END

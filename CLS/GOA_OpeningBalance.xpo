@@ -1,0 +1,155 @@
+﻿Exportfile for AOT version 1.0 or later
+Formatversion: 1
+
+***Element: CLS
+
+; Microsoft Dynamics AX Class: GOA_OpeningBalance unloaded
+; --------------------------------------------------------------------------------
+  CLSVERSION 1
+  
+  CLASS #GOA_OpeningBalance
+    PROPERTIES
+      Name                #GOA_OpeningBalance
+      Origin              #{1F4EAFD8-14CD-409E-9C5F-AE9D14546F93}
+    ENDPROPERTIES
+    
+    METHODS
+      SOURCE #createLedgerJourTrans
+        #private void createLedgerJourTrans(GOA_LedgerOpeningBalance _ledgerOpeningBalance)
+        #{
+        #    AxLedgerJournalTrans    axLedgerJournalTrans;
+        #
+        #    axLedgerJournalTrans = AxLedgerJournalTrans::construct();
+        #    axLedgerJournalTrans.parmJournalNum(_ledgerOpeningBalance.JournalNum);
+        #    axLedgerJournalTrans.parmAccountType(_ledgerOpeningBalance.AccountType);
+        #    axLedgerJournalTrans.parmTransactionType(_ledgerOpeningBalance.TransactionType);
+        #    axLedgerJournalTrans.parmAmountCurDebit(_ledgerOpeningBalance.AmountCurDebit);
+        #    axLedgerJournalTrans.parmAmountCurCredit(_ledgerOpeningBalance.AmountCurCredit);
+        #    axLedgerJournalTrans.parmLedgerDimension(_ledgerOpeningBalance.LedgerDimension);
+        #    axLedgerJournalTrans.parmOffsetLedgerDimension(_ledgerOpeningBalance.OffsetLedgerDimension);
+        #    axLedgerJournalTrans.parmOffsetAccountType(_ledgerOpeningBalance.OffsetAccountType);
+        #
+        #    axLedgerJournalTrans.parmTxt(_ledgerOpeningBalance.TransTxt);
+        #    axLedgerJournalTrans.parmInvoice(_ledgerOpeningBalance.InvoiceId);
+        #    axLedgerJournalTrans.parmDue(_ledgerOpeningBalance.DueDate);
+        #    axLedgerJournalTrans.parmDocumentDate(_ledgerOpeningBalance.DocumentDate);
+        #    axLedgerJournalTrans.save();
+        #}
+      ENDSOURCE
+      SOURCE #classDeclaration
+        #class GOA_OpeningBalance
+        #{
+        #}
+      ENDSOURCE
+      SOURCE #importFile
+        #private void importFile(GOA_OpeningBalanceDc _OpeningBalanceDc)
+        #{
+        #    #File
+        #    #define.Account(1)
+        #    #define.AmountCurCredit(2)
+        #    #define.AmountCurDebit(3)
+        #    #define.OffsetAccount(4)
+        #    #define.JournalNum(5)
+        #    #define.TransTxt(6)
+        #    #define.InvoiceId(7)
+        #    #define.DueDate(8)
+        #    #define.DocumentDate(9)
+        #    #define.Type(10)
+        #    #define.Ledger("L")
+        #    #define.Cust("C")
+        #    #define.Vend("V")
+        #
+        #
+        #    GOA_LedgerOpeningBalance    ledgerOpeningBalance;
+        #    Filename                    filename = _OpeningBalanceDc.parmFilename();
+        #    NoYes                       newJournal =  _OpeningBalanceDc.parmNewJournal();
+        #    TransDate                   transDate = _OpeningBalanceDc.parmTransDate();
+        #    LedgerJournalTable          ledgerJournalTable;
+        #    TextIo                      textFile;
+        #    FileIoPermission            perm;
+        #    container                   record;
+        #
+        #    if (!_OpeningBalanceDc.parmOnlyStageProcessing())
+        #    {
+        #        if(newJournal)
+        #        {
+        #            ttsBegin;
+        #            ledgerJournalTable.initFromLedgerJournalName(_OpeningBalanceDc.parmJournalName());
+        #            ledgerJournalTable.insert();
+        #            ttsCommit;
+        #        }
+        #
+        #        perm = new FileIoPermission(filename, #io_read);
+        #        perm.assert();
+        #        textFile = new TextIo(filename, #io_read);
+        #
+        #
+        #        if(!textFile || textFile.status() != IO_Status::Ok)
+        #        {
+        #            throw error(strFmt("@SYS76826",filename));
+        #        }
+        #        textFile.inFieldDelimiter(";");
+        #
+        #        record = textFile.read();
+        #
+        #
+        #        while (textFile.status() == IO_Status::Ok)
+        #        {
+        #            record = textFile.read();
+        #
+        #            if(textFile.status() == IO_Status::Ok)
+        #            {
+        #                ledgerOpeningBalance.clear();
+        #                ledgerOpeningBalance.initValue();
+        #                ledgerOpeningBalance.Account            = conPeek(record, #Account);
+        #                ledgerOpeningBalance.AmountCurCredit    = str2num(conPeek(record, #AmountCurCredit));
+        #                ledgerOpeningBalance.AmountCurDebit     = str2num(conPeek(record, #AmountCurDebit));
+        #                ledgerOpeningBalance.OffsetAccount      = conPeek(record, #OffsetAccount);
+        #                ledgerOpeningBalance.JournalNum         = (newJournal ? ledgerJournalTable.JournalNum : conPeek(record, #JournalNum));
+        #                ledgerOpeningBalance.TransDate          = transDate;
+        #                ledgerOpeningBalance.TransTxt           = conPeek(record, #TransTxt);
+        #                ledgerOpeningBalance.InvoiceId          = conPeek(record, #InvoiceId);
+        #                ledgerOpeningBalance.DueDate            = str2DateDMY(conPeek(record, #DueDate));
+        #                ledgerOpeningBalance.DocumentDate       = str2DateDMY(conPeek(record, #DocumentDate));
+        #
+        #                switch (conPeek(record, #Type))
+        #                {
+        #                    case #Cust:
+        #                        ledgerOpeningBalance.AccountType = LedgerJournalACType::Cust;
+        #                        break;
+        #                    case #Vend:
+        #                        ledgerOpeningBalance.AccountType = LedgerJournalACType::Vend;
+        #                        break;
+        #                    default :
+        #                        ledgerOpeningBalance.AccountType = LedgerJournalACType::Ledger;
+        #                }
+        #
+        #                ledgerOpeningBalance.insert();
+        #            }
+        #        }
+        #
+        #        CodeAccessPermission::revertAssert();
+        #    }
+        #    this.processStageTable();
+        #}
+      ENDSOURCE
+      SOURCE #processStageTable
+        #public void processStageTable()
+        #{
+        #
+        #    GOA_LedgerOpeningBalance ledgerOpeningBalance;
+        #    ttsBegin;
+        #    while select forUpdate ledgerOpeningBalance
+        #        where ledgerOpeningBalance.Imported == NoYes::No
+        #    {
+        #        ledgerOpeningBalance.Imported = NoYes::Yes;
+        #        ledgerOpeningBalance.update();
+        #        this.createLedgerJourTrans(ledgerOpeningBalance);
+        #    }
+        #    ttsCommit;
+        #}
+      ENDSOURCE
+    ENDMETHODS
+  ENDCLASS
+
+***Element: END

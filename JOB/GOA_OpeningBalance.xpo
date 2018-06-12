@@ -1,0 +1,44 @@
+﻿Exportfile for AOT version 1.0 or later
+Formatversion: 1
+
+***Element: JOB
+
+; Microsoft Dynamics AX Job: GOA_OpeningBalance unloaded
+; --------------------------------------------------------------------------------
+  JOBVERSION 1
+  
+  SOURCE #GOA_OpeningBalance
+    #static void GOA_OpeningBalance(Args _args)
+    #{
+    #    AxLedgerJournalTrans    axLedgerJournalTrans;
+    #    GOA_LedgerOpeningBalance ledgerOpeningBalance;
+    #    ttsBegin;
+    #    while select forUpdate ledgerOpeningBalance
+    #        where ledgerOpeningBalance.Imported == NoYes::No
+    #    {
+    #        ledgerOpeningBalance.Imported = NoYes::Yes;
+    #        ledgerOpeningBalance.updateLedgerDim();
+    #        ledgerOpeningBalance.update();
+    #
+    #        axLedgerJournalTrans = AxLedgerJournalTrans::construct();
+    #        axLedgerJournalTrans.parmJournalNum(ledgerOpeningBalance.JournalNum);
+    #        axLedgerJournalTrans.parmAccountType(ledgerOpeningBalance.AccountType);
+    #        axLedgerJournalTrans.parmTransactionType(ledgerOpeningBalance.TransactionType);
+    #        axLedgerJournalTrans.parmAmountCurDebit(ledgerOpeningBalance.AmountCurDebit);
+    #        axLedgerJournalTrans.parmAmountCurCredit(ledgerOpeningBalance.AmountCurCredit);
+    #        axLedgerJournalTrans.parmLedgerDimension(ledgerOpeningBalance.LedgerDimension);
+    #        axLedgerJournalTrans.parmOffsetLedgerDimension(ledgerOpeningBalance.OffsetLedgerDimension);
+    #        axLedgerJournalTrans.parmOffsetAccountType(ledgerOpeningBalance.OffsetAccountType);
+    #        axLedgerJournalTrans.save();
+    #
+    #    }
+    #    ttsCommit;
+    #}
+    #
+  ENDSOURCE
+  PROPERTIES
+    Origin              #{76D157D6-4B7E-4A20-A46D-CE171BD10B2F}
+  ENDPROPERTIES
+  
+
+***Element: END

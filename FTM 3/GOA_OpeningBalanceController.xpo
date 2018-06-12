@@ -1,0 +1,22 @@
+﻿Exportfile for AOT version 1.0 or later
+Formatversion: 1
+
+***Element: FTM
+
+; Microsoft Dynamics AX MENUITEM : GOA_OpeningBalanceController unloaded
+; --------------------------------------------------------------------------------
+  VERSION 1
+  
+  MENUITEM #GOA_OpeningBalanceController
+    Type: 3
+    PROPERTIES
+      Name                #GOA_OpeningBalanceController
+      ObjectType          #Class
+      Object              #GOA_OpeningBalanceController
+      Origin              #{C83FAE62-9CA5-4C64-995C-26974EECC2C7}
+    ENDPROPERTIES
+    
+  ENDMENUITEM
+  
+
+***Element: END

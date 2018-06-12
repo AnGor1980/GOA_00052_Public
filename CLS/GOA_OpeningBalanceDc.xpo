@@ -1,0 +1,82 @@
+﻿Exportfile for AOT version 1.0 or later
+Formatversion: 1
+
+***Element: CLS
+
+; Microsoft Dynamics AX Class: GOA_OpeningBalanceDc unloaded
+; --------------------------------------------------------------------------------
+  CLSVERSION 1
+  
+  CLASS #GOA_OpeningBalanceDc
+    PROPERTIES
+      Name                #GOA_OpeningBalanceDc
+      Origin              #{BDA52607-D7EB-4221-B740-EF7EB9511890}
+    ENDPROPERTIES
+    
+    METHODS
+      SOURCE #classDeclaration
+        #[DataContractAttribute]
+        #class GOA_OpeningBalanceDc
+        #{
+        #    GOA_NewJournal  newJournal;
+        #    Filename        filename;
+        #    TransDate       transDate;
+        #    LedgerJournalNameId     journalName;
+        #    NoYes   onlyStageProcessing;
+        #}
+      ENDSOURCE
+      SOURCE #parmFilename
+        #[DataMemberAttribute
+        #,SysOperationDisplayOrderAttribute('1')]
+        #public Filename parmFilename(Filename _filename = filename)
+        #{
+        #    filename = _filename;
+        #
+        #    return filename;
+        #}
+      ENDSOURCE
+      SOURCE #parmJournalName
+        #[DataMemberAttribute
+        #,SysOperationDisplayOrderAttribute('3')]
+        #public LedgerJournalNameId parmJournalName(LedgerJournalNameId _journalName = journalName)
+        #{
+        #    journalName = _journalName;
+        #
+        #    return journalName;
+        #}
+      ENDSOURCE
+      SOURCE #parmNewJournal
+        #[DataMemberAttribute
+        #,SysOperationDisplayOrderAttribute('2')]
+        #public GOA_NewJournal parmNewJournal(GOA_NewJournal _newJournal = newJournal)
+        #{
+        #    newJournal = _newJournal;
+        #
+        #    return newJournal;
+        #}
+      ENDSOURCE
+      SOURCE #parmOnlyStageProcessing
+        #[DataMemberAttribute
+        #,SysOperationLabelAttribute('Only stage table processing')
+        #,SysOperationDisplayOrderAttribute('0')]
+        #public NoYes parmOnlyStageProcessing(NoYes _onlyStageProcessing = onlyStageProcessing)
+        #{
+        #    onlyStageProcessing = _onlyStageProcessing;
+        #
+        #    return onlyStageProcessing;
+        #}
+      ENDSOURCE
+      SOURCE #parmTransDate
+        #[DataMemberAttribute
+        #,SysOperationDisplayOrderAttribute('4')]
+        #public TransDate parmTransDate(TransDate _transDate = transDate)
+        #{
+        #    transDate = _transDate;
+        #
+        #    return transDate;
+        #}
+      ENDSOURCE
+    ENDMETHODS
+  ENDCLASS
+
+***Element: END

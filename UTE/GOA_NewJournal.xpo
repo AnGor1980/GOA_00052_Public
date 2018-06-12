@@ -1,0 +1,31 @@
+﻿Exportfile for AOT version 1.0 or later
+Formatversion: 1
+
+***Element: UTE
+
+; Microsoft Dynamics AX Enum: GOA_NewJournal unloaded
+; --------------------------------------------------------------------------------
+  USERTYPEVERSION 6
+  
+  USERTYPE #GOA_NewJournal
+  ENUM
+    PROPERTIES
+      Name                #GOA_NewJournal
+      Label               #@SYS338820
+      Origin              #{7FEC19F8-E17A-4B2D-BC4F-BBEE28F991FA}
+      EnumType            #NoYes
+    ENDPROPERTIES
+    
+    TYPEELEMENTS
+    ENDTYPEELEMENTS
+    
+    TYPEREFERENCES
+    ENDTYPEREFERENCES
+    
+    TYPELOOKUPS
+    ENDTYPELOOKUPS
+    
+  ENDUSERTYPE
+  
+
+***Element: END
