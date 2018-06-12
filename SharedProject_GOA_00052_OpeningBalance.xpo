@@ -1,0 +1,750 @@
+﻿Exportfile for AOT version 1.0 or later
+Formatversion: 1
+
+***Element: FTM
+
+; Microsoft Dynamics AX MENUITEM : GOA_OpeningBalanceController unloaded
+; --------------------------------------------------------------------------------
+  VERSION 1
+  
+  MENUITEM #GOA_OpeningBalanceController
+    Type: 3
+    PROPERTIES
+      Name                #GOA_OpeningBalanceController
+      ObjectType          #Class
+      Object              #GOA_OpeningBalanceController
+      Origin              #{C83FAE62-9CA5-4C64-995C-26974EECC2C7}
+    ENDPROPERTIES
+    
+  ENDMENUITEM
+  
+
+***Element: CLS
+
+; Microsoft Dynamics AX Class: GOA_OpeningBalanceController unloaded
+; --------------------------------------------------------------------------------
+  CLSVERSION 1
+  
+  CLASS #GOA_OpeningBalanceController
+    PROPERTIES
+      Name                #GOA_OpeningBalanceController
+      Extends             #SysOperationServiceController
+      Origin              #{B2202DB5-B9AC-41D6-93AA-F6BD2D3A3DED}
+    ENDPROPERTIES
+    
+    METHODS
+      SOURCE #classDeclaration
+        #class GOA_OpeningBalanceController extends SysOperationServiceController
+        #{
+        #}
+      ENDSOURCE
+      SOURCE #construct
+        #public static GOA_OpeningBalanceController construct(SysOperationExecutionMode _mode = SysOperationExecutionMode::Synchronous)
+        #{
+        #    GOA_OpeningBalanceController  controller = new GOA_OpeningBalanceController(classStr(GOA_OpeningBalance)
+        #                                                                                    ,methodStr(GOA_OpeningBalance, importFile)
+        #                                                                                    ,_mode);
+        #    return controller;
+        #}
+      ENDSOURCE
+      SOURCE #main
+        #public static void main(Args _args)
+        #{
+        #    GOA_OpeningBalanceController controller = GOA_OpeningBalanceController::construct();
+        #    controller.startOperation();
+        #
+        #}
+      ENDSOURCE
+    ENDMETHODS
+  ENDCLASS
+
+***Element: CLS
+
+; Microsoft Dynamics AX Class: GOA_OpeningBalance unloaded
+; --------------------------------------------------------------------------------
+  CLSVERSION 1
+  
+  CLASS #GOA_OpeningBalance
+    PROPERTIES
+      Name                #GOA_OpeningBalance
+      Origin              #{1F4EAFD8-14CD-409E-9C5F-AE9D14546F93}
+    ENDPROPERTIES
+    
+    METHODS
+      SOURCE #createLedgerJourTrans
+        #private void createLedgerJourTrans(GOA_LedgerOpeningBalance _ledgerOpeningBalance)
+        #{
+        #    AxLedgerJournalTrans    axLedgerJournalTrans;
+        #
+        #    axLedgerJournalTrans = AxLedgerJournalTrans::construct();
+        #    axLedgerJournalTrans.parmJournalNum(_ledgerOpeningBalance.JournalNum);
+        #    axLedgerJournalTrans.parmAccountType(_ledgerOpeningBalance.AccountType);
+        #    axLedgerJournalTrans.parmTransactionType(_ledgerOpeningBalance.TransactionType);
+        #    axLedgerJournalTrans.parmAmountCurDebit(_ledgerOpeningBalance.AmountCurDebit);
+        #    axLedgerJournalTrans.parmAmountCurCredit(_ledgerOpeningBalance.AmountCurCredit);
+        #    axLedgerJournalTrans.parmLedgerDimension(_ledgerOpeningBalance.LedgerDimension);
+        #    axLedgerJournalTrans.parmOffsetLedgerDimension(_ledgerOpeningBalance.OffsetLedgerDimension);
+        #    axLedgerJournalTrans.parmOffsetAccountType(_ledgerOpeningBalance.OffsetAccountType);
+        #
+        #    axLedgerJournalTrans.parmTxt(_ledgerOpeningBalance.TransTxt);
+        #    axLedgerJournalTrans.parmInvoice(_ledgerOpeningBalance.InvoiceId);
+        #    axLedgerJournalTrans.parmDue(_ledgerOpeningBalance.DueDate);
+        #    axLedgerJournalTrans.parmDocumentDate(_ledgerOpeningBalance.DocumentDate);
+        #    axLedgerJournalTrans.save();
+        #}
+      ENDSOURCE
+      SOURCE #classDeclaration
+        #class GOA_OpeningBalance
+        #{
+        #}
+      ENDSOURCE
+      SOURCE #importFile
+        #private void importFile(GOA_OpeningBalanceDc _OpeningBalanceDc)
+        #{
+        #    #File
+        #    #define.Account(1)
+        #    #define.AmountCurCredit(2)
+        #    #define.AmountCurDebit(3)
+        #    #define.OffsetAccount(4)
+        #    #define.JournalNum(5)
+        #    #define.TransTxt(6)
+        #    #define.InvoiceId(7)
+        #    #define.DueDate(8)
+        #    #define.DocumentDate(9)
+        #    #define.Type(10)
+        #    #define.Ledger("L")
+        #    #define.Cust("C")
+        #    #define.Vend("V")
+        #
+        #
+        #    GOA_LedgerOpeningBalance    ledgerOpeningBalance;
+        #    Filename                    filename = _OpeningBalanceDc.parmFilename();
+        #    NoYes                       newJournal =  _OpeningBalanceDc.parmNewJournal();
+        #    TransDate                   transDate = _OpeningBalanceDc.parmTransDate();
+        #    LedgerJournalTable          ledgerJournalTable;
+        #    TextIo                      textFile;
+        #    FileIoPermission            perm;
+        #    container                   record;
+        #
+        #    if (!_OpeningBalanceDc.parmOnlyStageProcessing())
+        #    {
+        #        if(newJournal)
+        #        {
+        #            ttsBegin;
+        #            ledgerJournalTable.initFromLedgerJournalName(_OpeningBalanceDc.parmJournalName());
+        #            ledgerJournalTable.insert();
+        #            ttsCommit;
+        #        }
+        #
+        #        perm = new FileIoPermission(filename, #io_read);
+        #        perm.assert();
+        #        textFile = new TextIo(filename, #io_read);
+        #
+        #
+        #        if(!textFile || textFile.status() != IO_Status::Ok)
+        #        {
+        #            throw error(strFmt("@SYS76826",filename));
+        #        }
+        #        textFile.inFieldDelimiter(";");
+        #
+        #        record = textFile.read();
+        #
+        #
+        #        while (textFile.status() == IO_Status::Ok)
+        #        {
+        #            record = textFile.read();
+        #
+        #            if(textFile.status() == IO_Status::Ok)
+        #            {
+        #                ledgerOpeningBalance.clear();
+        #                ledgerOpeningBalance.initValue();
+        #                ledgerOpeningBalance.Account            = conPeek(record, #Account);
+        #                ledgerOpeningBalance.AmountCurCredit    = str2num(conPeek(record, #AmountCurCredit));
+        #                ledgerOpeningBalance.AmountCurDebit     = str2num(conPeek(record, #AmountCurDebit));
+        #                ledgerOpeningBalance.OffsetAccount      = conPeek(record, #OffsetAccount);
+        #                ledgerOpeningBalance.JournalNum         = (newJournal ? ledgerJournalTable.JournalNum : conPeek(record, #JournalNum));
+        #                ledgerOpeningBalance.TransDate          = transDate;
+        #                ledgerOpeningBalance.TransTxt           = conPeek(record, #TransTxt);
+        #                ledgerOpeningBalance.InvoiceId          = conPeek(record, #InvoiceId);
+        #                ledgerOpeningBalance.DueDate            = str2DateDMY(conPeek(record, #DueDate));
+        #                ledgerOpeningBalance.DocumentDate       = str2DateDMY(conPeek(record, #DocumentDate));
+        #
+        #                switch (conPeek(record, #Type))
+        #                {
+        #                    case #Cust:
+        #                        ledgerOpeningBalance.AccountType = LedgerJournalACType::Cust;
+        #                        break;
+        #                    case #Vend:
+        #                        ledgerOpeningBalance.AccountType = LedgerJournalACType::Vend;
+        #                        break;
+        #                    default :
+        #                        ledgerOpeningBalance.AccountType = LedgerJournalACType::Ledger;
+        #                }
+        #
+        #                ledgerOpeningBalance.insert();
+        #            }
+        #        }
+        #
+        #        CodeAccessPermission::revertAssert();
+        #    }
+        #    this.processStageTable();
+        #}
+      ENDSOURCE
+      SOURCE #processStageTable
+        #public void processStageTable()
+        #{
+        #
+        #    GOA_LedgerOpeningBalance ledgerOpeningBalance;
+        #    ttsBegin;
+        #    while select forUpdate ledgerOpeningBalance
+        #        where ledgerOpeningBalance.Imported == NoYes::No
+        #    {
+        #        ledgerOpeningBalance.Imported = NoYes::Yes;
+        #        ledgerOpeningBalance.update();
+        #        this.createLedgerJourTrans(ledgerOpeningBalance);
+        #    }
+        #    ttsCommit;
+        #}
+      ENDSOURCE
+    ENDMETHODS
+  ENDCLASS
+
+***Element: CLS
+
+; Microsoft Dynamics AX Class: GOA_OpeningBalanceDc unloaded
+; --------------------------------------------------------------------------------
+  CLSVERSION 1
+  
+  CLASS #GOA_OpeningBalanceDc
+    PROPERTIES
+      Name                #GOA_OpeningBalanceDc
+      Origin              #{BDA52607-D7EB-4221-B740-EF7EB9511890}
+    ENDPROPERTIES
+    
+    METHODS
+      SOURCE #classDeclaration
+        #[DataContractAttribute]
+        #class GOA_OpeningBalanceDc
+        #{
+        #    GOA_NewJournal  newJournal;
+        #    Filename        filename;
+        #    TransDate       transDate;
+        #    LedgerJournalNameId     journalName;
+        #    NoYes   onlyStageProcessing;
+        #}
+      ENDSOURCE
+      SOURCE #parmFilename
+        #[DataMemberAttribute
+        #,SysOperationDisplayOrderAttribute('1')]
+        #public Filename parmFilename(Filename _filename = filename)
+        #{
+        #    filename = _filename;
+        #
+        #    return filename;
+        #}
+      ENDSOURCE
+      SOURCE #parmJournalName
+        #[DataMemberAttribute
+        #,SysOperationDisplayOrderAttribute('3')]
+        #public LedgerJournalNameId parmJournalName(LedgerJournalNameId _journalName = journalName)
+        #{
+        #    journalName = _journalName;
+        #
+        #    return journalName;
+        #}
+      ENDSOURCE
+      SOURCE #parmNewJournal
+        #[DataMemberAttribute
+        #,SysOperationDisplayOrderAttribute('2')]
+        #public GOA_NewJournal parmNewJournal(GOA_NewJournal _newJournal = newJournal)
+        #{
+        #    newJournal = _newJournal;
+        #
+        #    return newJournal;
+        #}
+      ENDSOURCE
+      SOURCE #parmOnlyStageProcessing
+        #[DataMemberAttribute
+        #,SysOperationLabelAttribute('Only stage table processing')
+        #,SysOperationDisplayOrderAttribute('0')]
+        #public NoYes parmOnlyStageProcessing(NoYes _onlyStageProcessing = onlyStageProcessing)
+        #{
+        #    onlyStageProcessing = _onlyStageProcessing;
+        #
+        #    return onlyStageProcessing;
+        #}
+      ENDSOURCE
+      SOURCE #parmTransDate
+        #[DataMemberAttribute
+        #,SysOperationDisplayOrderAttribute('4')]
+        #public TransDate parmTransDate(TransDate _transDate = transDate)
+        #{
+        #    transDate = _transDate;
+        #
+        #    return transDate;
+        #}
+      ENDSOURCE
+    ENDMETHODS
+  ENDCLASS
+
+***Element: UTE
+
+; Microsoft Dynamics AX Enum: GOA_NewJournal unloaded
+; --------------------------------------------------------------------------------
+  USERTYPEVERSION 6
+  
+  USERTYPE #GOA_NewJournal
+  ENUM
+    PROPERTIES
+      Name                #GOA_NewJournal
+      Label               #@SYS338820
+      Origin              #{7FEC19F8-E17A-4B2D-BC4F-BBEE28F991FA}
+      EnumType            #NoYes
+    ENDPROPERTIES
+    
+    TYPEELEMENTS
+    ENDTYPEELEMENTS
+    
+    TYPEREFERENCES
+    ENDTYPEREFERENCES
+    
+    TYPELOOKUPS
+    ENDTYPELOOKUPS
+    
+  ENDUSERTYPE
+  
+
+***Element: DBT
+
+; Microsoft Dynamics AX Table : GOA_LedgerOpeningBalance unloaded
+; --------------------------------------------------------------------------------
+  TABLEVERSION 1
+  
+  TABLE #GOA_LedgerOpeningBalance
+    EnforceFKRelation 1
+    PROPERTIES
+      Name                #GOA_LedgerOpeningBalance
+      CreateRecIdIndex    #Yes
+      PrimaryIndex        #SurrogateKey
+      ClusterIndex        #SurrogateKey
+      Origin              #{F1181596-C404-4843-A358-BCCD40E2FA15}
+    ENDPROPERTIES
+    
+    FIELDS
+      FIELD #DocumentDate
+        DATE
+        PROPERTIES
+          Name                #DocumentDate
+          Table               #GOA_LedgerOpeningBalance
+          Origin              #{4A700AB1-68EF-4049-AAB1-A2024ED8AB6B}
+          ExtendedDataType    #DocumentDate
+        ENDPROPERTIES
+        
+      FIELD #Account
+        STRING
+        PROPERTIES
+          Name                #Account
+          Table               #GOA_LedgerOpeningBalance
+          Origin              #{4E89D638-C0FD-4292-9030-2DEA0FC1DD21}
+          ExtendedDataType    #AccountNumber
+          StringSize          #30
+        ENDPROPERTIES
+        
+      FIELD #AccountType
+        ENUM
+        PROPERTIES
+          Name                #AccountType
+          Table               #GOA_LedgerOpeningBalance
+          Origin              #{2C13F289-DE6C-492E-94C4-15FA291BDD5C}
+          EnumType            #LedgerJournalACType
+        ENDPROPERTIES
+        
+      FIELD #AmountCurCredit
+        REAL
+        PROPERTIES
+          Name                #AmountCurCredit
+          Table               #GOA_LedgerOpeningBalance
+          Origin              #{22D3A1A1-83A0-4C9E-A785-6E2AC0220E2B}
+        ENDPROPERTIES
+        
+      FIELD #AmountCurDebit
+        REAL
+        PROPERTIES
+          Name                #AmountCurDebit
+          Table               #GOA_LedgerOpeningBalance
+          Origin              #{69EBD09B-EDBF-44A7-A08F-71B3C326DF1E}
+        ENDPROPERTIES
+        
+      FIELD #DueDate
+        DATE
+        PROPERTIES
+          Name                #DueDate
+          Table               #GOA_LedgerOpeningBalance
+          Origin              #{95FB1B30-2A7D-41CA-A9C0-8145ACB523F6}
+          ExtendedDataType    #DueDate
+        ENDPROPERTIES
+        
+      FIELD #Imported
+        ENUM
+        PROPERTIES
+          Name                #Imported
+          Table               #GOA_LedgerOpeningBalance
+          Origin              #{CA938338-96BF-4CFC-9EEC-76987B893AF7}
+          EnumType            #NoYes
+        ENDPROPERTIES
+        
+      FIELD #InvoiceId
+        STRING
+        PROPERTIES
+          Name                #InvoiceId
+          Table               #GOA_LedgerOpeningBalance
+          Origin              #{FD183435-4841-46C8-A462-5492DBEF0FCB}
+          ExtendedDataType    #InvoiceId
+          StringSize          #20
+        ENDPROPERTIES
+        
+      FIELD #JournalNum
+        STRING
+        PROPERTIES
+          Name                #JournalNum
+          Table               #GOA_LedgerOpeningBalance
+          Origin              #{A44D9D95-D284-487A-86B2-E38E30F6966C}
+          ExtendedDataType    #LedgerJournalId
+        ENDPROPERTIES
+        
+      FIELD #LedgerDimension
+        INT64
+        PROPERTIES
+          Name                #LedgerDimension
+          Table               #GOA_LedgerOpeningBalance
+          Origin              #{D83DBCBE-D92D-4DA7-B33F-9C99EF79B6FA}
+          ExtendedDataType    #DimensionDynamicAccount
+        ENDPROPERTIES
+        
+      FIELD #OffsetAccount
+        STRING
+        PROPERTIES
+          Name                #OffsetAccount
+          Table               #GOA_LedgerOpeningBalance
+          Origin              #{7AA42112-C437-4C98-B331-F6A37895DBBE}
+          ExtendedDataType    #MainAccountNum
+          StringSize          #20
+        ENDPROPERTIES
+        
+      FIELD #OffsetAccountType
+        ENUM
+        PROPERTIES
+          Name                #OffsetAccountType
+          Table               #GOA_LedgerOpeningBalance
+          Origin              #{2BADE793-CEFF-4CA0-9704-68C8105F0A87}
+          EnumType            #LedgerJournalACType
+        ENDPROPERTIES
+        
+      FIELD #OffsetLedgerDimension
+        INT64
+        PROPERTIES
+          Name                #OffsetLedgerDimension
+          Table               #GOA_LedgerOpeningBalance
+          Origin              #{5B423E45-EE1B-4351-A39E-B1410668BF11}
+          ExtendedDataType    #DimensionDynamicAccount
+        ENDPROPERTIES
+        
+      FIELD #TransactionType
+        ENUM
+        PROPERTIES
+          Name                #TransactionType
+          Table               #GOA_LedgerOpeningBalance
+          Origin              #{95744727-AC18-4DBC-82E5-3962A8C94A95}
+          EnumType            #LedgerTransType
+        ENDPROPERTIES
+        
+      FIELD #TransDate
+        DATE
+        PROPERTIES
+          Name                #TransDate
+          Table               #GOA_LedgerOpeningBalance
+          Origin              #{2F46327B-7380-4C46-8EB9-5522E6E506F2}
+          ExtendedDataType    #TransDate
+        ENDPROPERTIES
+        
+      FIELD #TransTxt
+        STRING
+        PROPERTIES
+          Name                #TransTxt
+          Table               #GOA_LedgerOpeningBalance
+          Origin              #{942D6998-347B-4E3C-852D-D7A74B72B366}
+          ExtendedDataType    #TransTxt
+          StringSize          #140
+        ENDPROPERTIES
+        
+    ENDFIELDS
+    GROUPS
+    ENDGROUPS
+    
+    INDICES
+    ENDINDICES
+    FULLTEXTINDICES
+    ENDFULLTEXTINDICES
+    REFERENCES
+      REFERENCE #DimensionAttributeValueCombination
+        PROPERTIES
+          Name                #DimensionAttributeValueCombination
+          Table               #DimensionAttributeValueCombination
+          Role                #LedgerDimension
+        ENDPROPERTIES
+        
+        FIELDREFERENCES
+          REFERENCETYPE PKFK
+          PROPERTIES
+            Field               #LedgerDimension
+            RelatedField        #RecId
+          ENDPROPERTIES
+          
+        ENDFIELDREFERENCES
+      ENDREFERENCE
+      REFERENCE #OffsetDimensionAttributeValueCombination
+        PROPERTIES
+          Name                #OffsetDimensionAttributeValueCombination
+          Table               #DimensionAttributeValueCombination
+          Role                #OffsetLedgerDimension
+        ENDPROPERTIES
+        
+        FIELDREFERENCES
+          REFERENCETYPE PKFK
+          PROPERTIES
+            Field               #OffsetLedgerDimension
+            RelatedField        #RecId
+          ENDPROPERTIES
+          
+        ENDFIELDREFERENCES
+      ENDREFERENCE
+    ENDREFERENCES
+    
+    DELETEACTIONS
+    ENDDELETEACTIONS
+    
+    METHODS
+      SOURCE #getLedgerDimension
+        #private RecId getLedgerDimension(AccountNumber _AccountNumber,LedgerJournalACType _AccountType)
+        #{
+        #
+        #    return  _AccountType == LedgerJournalACType::Ledger ?
+        #            this.findDimensionAttributeValueCombination(_AccountNumber)
+        #        : DimensionStorage::getDynamicAccount(_AccountNumber, enum2int(_AccountType));
+        #
+        #}
+      ENDSOURCE
+      SOURCE #findDimensionAttributeValueCombination
+        #private RecId findDimensionAttributeValueCombination(MainAccountNum _MainAccountId)
+        #{
+        #    RecId ret;
+        #    LedgerChartOfAccounts ledgerChartOfAccounts;
+        #    MainAccount mainAccount;
+        #    DimensionAttributeValueCombination  dimensionAttributeValueCombination;
+        #    DimensionHierarchy dimensionHierarchy;
+        #
+        #    dimensionHierarchy = DimensionHierarchy::findByTypeAndName(DimensionHierarchyType::AccountStructure, this.dataAreaId);
+        #    ledgerChartOfAccounts = LedgerChartOfAccounts::findByName(this.dataAreaId);
+        #    if(ledgerChartOfAccounts)
+        #    {
+        #        mainAccount = MainAccount::findByMainAccountId(_MainAccountId,false,ledgerChartOfAccounts.RecId);
+        #        if (mainAccount)
+        #        {
+        #            ret = DimensionDefaultingEngine::getLedgerDimensionFromAccountAndDim(mainAccount.RecId,dimensionHierarchy.RecId);
+        #        }
+        #    }
+        #    return ret;
+        #}
+      ENDSOURCE
+      SOURCE #initValue
+        #public void initValue()
+        #{
+        #    this.TransactionType    = LedgerTransType::GeneralJournal;
+        #    this.OffsetAccountType  = LedgerJournalACType::Ledger;
+        #
+        #    super();
+        #}
+      ENDSOURCE
+      SOURCE #insert
+        #public void insert()
+        #{
+        #    this.updateLedgerDim();
+        #    super();
+        #}
+      ENDSOURCE
+      SOURCE #updateLedgerDim
+        #public void updateLedgerDim()
+        #{
+        #    LedgerChartOfAccounts ledgerChartOfAccounts;
+        #    MainAccount mainAccount;
+        #    DimensionAttributeValueCombination  dimensionAttributeValueCombination;
+        #
+        #    if(!this.LedgerDimension)
+        #        this.LedgerDimension = this.getLedgerDimension(this.Account, this.AccountType);
+        #
+        #    if(!this.OffsetLedgerDimension)
+        #        this.OffsetLedgerDimension = this.getLedgerDimension(this.OffsetAccount, this.OffsetAccountType);
+        #
+        #}
+      ENDSOURCE
+    ENDMETHODS
+  ENDTABLE
+  
+
+***Element: JOB
+
+; Microsoft Dynamics AX Job: GOA_OpeningBalance unloaded
+; --------------------------------------------------------------------------------
+  JOBVERSION 1
+  
+  SOURCE #GOA_OpeningBalance
+    #static void GOA_OpeningBalance(Args _args)
+    #{
+    #    AxLedgerJournalTrans    axLedgerJournalTrans;
+    #    GOA_LedgerOpeningBalance ledgerOpeningBalance;
+    #    ttsBegin;
+    #    while select forUpdate ledgerOpeningBalance
+    #        where ledgerOpeningBalance.Imported == NoYes::No
+    #    {
+    #        ledgerOpeningBalance.Imported = NoYes::Yes;
+    #        ledgerOpeningBalance.updateLedgerDim();
+    #        ledgerOpeningBalance.update();
+    #
+    #        axLedgerJournalTrans = AxLedgerJournalTrans::construct();
+    #        axLedgerJournalTrans.parmJournalNum(ledgerOpeningBalance.JournalNum);
+    #        axLedgerJournalTrans.parmAccountType(ledgerOpeningBalance.AccountType);
+    #        axLedgerJournalTrans.parmTransactionType(ledgerOpeningBalance.TransactionType);
+    #        axLedgerJournalTrans.parmAmountCurDebit(ledgerOpeningBalance.AmountCurDebit);
+    #        axLedgerJournalTrans.parmAmountCurCredit(ledgerOpeningBalance.AmountCurCredit);
+    #        axLedgerJournalTrans.parmLedgerDimension(ledgerOpeningBalance.LedgerDimension);
+    #        axLedgerJournalTrans.parmOffsetLedgerDimension(ledgerOpeningBalance.OffsetLedgerDimension);
+    #        axLedgerJournalTrans.parmOffsetAccountType(ledgerOpeningBalance.OffsetAccountType);
+    #        axLedgerJournalTrans.save();
+    #
+    #    }
+    #    ttsCommit;
+    #}
+    #
+  ENDSOURCE
+  PROPERTIES
+    Origin              #{76D157D6-4B7E-4A20-A46D-CE171BD10B2F}
+  ENDPROPERTIES
+  
+
+***Element: PRN
+
+; Microsoft Dynamics AX Project : GOA_00052_OpeningBalance unloaded
+; --------------------------------------------------------------------------------
+  PROJECTVERSION 2
+  
+  PROJECT #GOA_00052_OpeningBalance
+  SHARED
+  PROPERTIES
+    Name                #GOA_00052_OpeningBalance
+    Origin              #{6A8C1DF3-A7AD-4234-9DBC-848AF990022A}
+  ENDPROPERTIES
+  
+    PROJECTCLASS ProjectNode
+    GROUP #Action
+      PROPERTIES
+        Name                #Action
+        ProjectGroupType    #Action
+        GroupMask           #
+        PreventEditProperties #No
+      ENDPROPERTIES
+      
+      BEGINNODE
+        FILETYPE 0
+        UTILTYPE 3
+        UTILOBJECTID 0
+        NODETYPE 296
+        NAME #GOA_OpeningBalanceController
+      ENDNODE
+      ENDGROUP
+      
+    GROUP #Classes
+      PROPERTIES
+        Name                #Classes
+        ProjectGroupType    #Classes
+        GroupMask           #
+        PreventEditProperties #No
+      ENDPROPERTIES
+      
+      BEGINNODE
+        FILETYPE 0
+        UTILTYPE 45
+        UTILOBJECTID 1038751
+        NODETYPE 329
+        NAME #GOA_OpeningBalanceController
+      ENDNODE
+      BEGINNODE
+        FILETYPE 0
+        UTILTYPE 45
+        UTILOBJECTID 1038749
+        NODETYPE 329
+        NAME #GOA_OpeningBalance
+      ENDNODE
+      BEGINNODE
+        FILETYPE 0
+        UTILTYPE 45
+        UTILOBJECTID 1038750
+        NODETYPE 329
+        NAME #GOA_OpeningBalanceDc
+      ENDNODE
+      ENDGROUP
+      
+    GROUP #DataDictionary
+      PROPERTIES
+        Name                #DataDictionary
+        ProjectGroupType    #DataDictionary
+        GroupMask           #
+        PreventEditProperties #No
+      ENDPROPERTIES
+      
+      GROUP #ExtendedDataTypes
+        PROPERTIES
+          Name                #ExtendedDataTypes
+          ProjectGroupType    #ExtendedDataTypes
+          GroupMask           #
+          PreventEditProperties #No
+        ENDPROPERTIES
+        
+        BEGINNODE
+          FILETYPE 0
+          UTILTYPE 41
+          UTILOBJECTID 108294
+          NODETYPE 228
+          NAME #GOA_NewJournal
+        ENDNODE
+        ENDGROUP
+        
+      GROUP #Tables
+        PROPERTIES
+          Name                #Tables
+          ProjectGroupType    #Tables
+          GroupMask           #
+          PreventEditProperties #No
+        ENDPROPERTIES
+        
+        BEGINNODE
+          FILETYPE 0
+          UTILTYPE 44
+          UTILOBJECTID 110150
+          NODETYPE 204
+          NAME #GOA_LedgerOpeningBalance
+        ENDNODE
+        ENDGROUP
+        
+      ENDGROUP
+      
+    BEGINNODE
+      FILETYPE 0
+      UTILTYPE 5
+      UTILOBJECTID 0
+      NODETYPE 215
+      NAME #GOA_OpeningBalance
+    ENDNODE
+  ENDPROJECT
+  
+
+***Element: END
