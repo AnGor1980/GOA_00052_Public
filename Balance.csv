@@ -1,0 +1,9 @@
+Account;AmountCurCredit;AmountCurDebit;OffsetAccount;JournalNum;TransTxt;InvoiceId;DueDate;DocumentDate;Type
+16000;;400;99999;Hb_053164;Open balance;;;;L
+23000;200;;99999;Hb_053164;Open balance;;;;L
+72300;300;;99999;Hb_053164;Open balance;;;;L
+72330;;340;99999;Hb_053164;;;;;L
+80000;500;;99999;Hb_053164;;;;;L
+82101;;400;99999;Hb_053164;;;;;L
+82201;140;;99999;Hb_053164;;;;;L
+100006;100;;99999;;cust;TRUK0229;17.04.2018;17.04.2018;C
